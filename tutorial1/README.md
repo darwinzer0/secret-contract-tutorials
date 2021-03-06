@@ -1,4 +1,4 @@
-# Developing your first secret contract
+# Tutorial: Developing your first secret contract
 
 ## Introduction
 
@@ -30,7 +30,7 @@ There are three main functions that any secret contract can execute once it has 
 2. `handle` takes a handle message as input from a client, executes transactions based on the content of the message, and outputs a response message to the client.
 3. `query` takes a query message as input from a client, reads data from storage to answer the query, and outputs a response message to the client.
 
-The key difference between `handle` and `query` is that `handle` can execute transactions that change the state of the storage, whereas `query` is read-only. `handle` transactions therefore require a gas payment from the requester in order to succeed, but a `query` does not[^1]. You can see this in the `customFees` object created in the earlier [Tutorial 5](https://learn.figment.io/network-documentation/secret/tutorials/5.-writing-and-deploying-your-first-secret-contract#deploying-the-contract).
+The key difference between `handle` and `query` is that `handle` can execute transactions that change the state of the storage, whereas `query` is read-only. `handle` transactions therefore require a gas payment from the requester in order to succeed, but a `query` does not<sup id="a1">[1](#f1)</sup>. You can see this in the `customFees` object created in the earlier [Tutorial 5](https://learn.figment.io/network-documentation/secret/tutorials/5.-writing-and-deploying-your-first-secret-contract#deploying-the-contract).
 
 We define these three functions (and any additional helper functions) in our `src/contract.rs` file as follows:
 
@@ -263,7 +263,7 @@ The toolkit is not automatically added to secret contract template, so add the f
 secret-toolkit = { git = "https://github.com/enigmampc/secret-toolkit" }
 ```
 
-We now define three helper functions in `state.rs` to read and write data to storage using bincode2 [^2]:
+We now define three helper functions in `state.rs` to read and write data to storage using bincode2 <sup id="a2">[2](#f2)</sup>:
 
 * `save` will serialize a struct using `bincode2` and write it to storage using the storage `set()` method.
 * `load` will retrieve the data from storage using the `get()` method, deserialize it, and returns a `StdResult` with the data. If the key is not found a "not found" `StdError` is returned. Using the `?` operator in the calling function will cause the error to be sent back up as the response.
@@ -495,7 +495,7 @@ This tutorial was written by Ben Adams, a senior lecturer in computer science an
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
 </div>
 
-[^1]: Although, queries do not impose a fee, they are metered by gas. This allows a node to reject a long-running query.
-[^2]: These functions are based on the [Sealed Bid Auction contract code](https://github.com/baedrik/SCRT-sealed-bid-auction/blob/master/src/state.rs).
+<b id="f1">1</b>: Although, queries do not impose a fee, they are metered by gas. This allows a node to reject a long-running query.[↩](#a1)
+<b id="f2">2</b>: These functions are based on the [Sealed Bid Auction contract code](https://github.com/baedrik/SCRT-sealed-bid-auction/blob/master/src/state.rs).[↩](#a2)
 
 

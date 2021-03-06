@@ -30,7 +30,7 @@ There are three main functions that any secret contract can execute once it has 
 2. `handle` takes a handle message as input from a client, executes transactions based on the content of the message, and outputs a response message to the client.
 3. `query` takes a query message as input from a client, reads data from storage to answer the query, and outputs a response message to the client.
 
-The key difference between `handle` and `query` is that `handle` can execute transactions that change the state of the storage, whereas `query` is read-only. `handle` transactions therefore require a gas payment from the requester in order to succeed, but a `query` does not<sup id="a1">[1](#f1)</sup>. You can see this in the `customFees` object created in the earlier [Tutorial 5](https://learn.figment.io/network-documentation/secret/tutorials/5.-writing-and-deploying-your-first-secret-contract#deploying-the-contract).
+The key difference between `handle` and `query` is that `handle` can execute transactions that change the state of the storage, whereas `query` is read-only. `handle` transactions therefore require a gas payment from the requester in order to succeed, but a `query` does not<sup id="a1">[1](#f1)</sup>. You can see this in the `customFees` object created in the Figment Learn [Tutorial 5](https://learn.figment.io/network-documentation/secret/tutorials/5.-writing-and-deploying-your-first-secret-contract#deploying-the-contract).
 
 We define these three functions (and any additional helper functions) in our `src/contract.rs` file as follows:
 

@@ -175,18 +175,12 @@
 
    END OF TERMS AND CONDITIONS
 
-   APPENDIX: How to apply the Apache License to your work.
+   Copyright 2021 Benjamin Adams
 
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
+   For the purposes of licensing, the content of this repository is 
+   divided into two categories:
 
-   Copyright [yyyy] [name of copyright owner]
+   1. CODE INCLUDING DOCUMENTATION: 
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -199,3 +193,10 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+   2. TUTORIAL MARKDOWN FILES:
+
+   All tutorial markdown files are licensed under a Creative Commons Attribution 4.0 International License (CC BY 4.0). You may obtain a copy of the CC BY 4.0 license at
+
+       http://creativecommons.org/licenses/by/4.0/ 
+

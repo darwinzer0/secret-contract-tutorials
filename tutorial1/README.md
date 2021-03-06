@@ -477,7 +477,7 @@ fn query_stats<S: Storage, A: Api, Q: Querier>(deps: &Extern<S, A, Q>) -> StdRes
 }
 ```
 
-You now have a working reminder secret contract!
+You now have a working reminder secret contract! The completed contract code can be found [here](https://github.com/darwinzer0/secret-contract-tutorials/tree/main/tutorial1/code).
 
 ## Next steps
 

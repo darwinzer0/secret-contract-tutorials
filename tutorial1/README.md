@@ -483,6 +483,10 @@ You now have a working reminder secret contract!
 
 Unlike a normal web service, there is no mechanism for a secret contract to repeatedly push information through an open socket connection in response to a handle or query message. Instead, if you want to support that behavior, then you must develop a pull mechanism where the client makes repeated executions of the contract. However, as our contract currently implements the functionality of reading a reminder as a handle execution that would very quickly cost the user a lot of `SCRT` due to gas fees! The solution is to create a private viewing key that allows a user to see their own reminder using a query instead of a handle message. In the next tutorial we will show how that can be done in the context of a simple React application.
 
+<b id="f1">1</b>: Although, queries do not impose a fee, they are metered by gas. This allows a node to reject a long-running query.[↩](#a1)
+
+<b id="f2">2</b>: These functions are based on the [Sealed Bid Auction contract code](https://github.com/baedrik/SCRT-sealed-bid-auction/blob/master/src/state.rs).[↩](#a2)
+
 ## About the author
 
 This tutorial was written by Ben Adams, a senior lecturer in computer science and software engineering at the University of Canterbury in New Zealand.
@@ -490,8 +494,5 @@ This tutorial was written by Ben Adams, a senior lecturer in computer science an
 <div class="cc">
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
 </div>
-
-<b id="f1">1</b>: Although, queries do not impose a fee, they are metered by gas. This allows a node to reject a long-running query.[↩](#a1)
-<b id="f2">2</b>: These functions are based on the [Sealed Bid Auction contract code](https://github.com/baedrik/SCRT-sealed-bid-auction/blob/master/src/state.rs).[↩](#a2)
 
 

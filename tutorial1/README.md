@@ -479,13 +479,9 @@ fn query_stats<S: Storage, A: Api, Q: Querier>(deps: &Extern<S, A, Q>) -> StdRes
 
 You now have a working reminder secret contract!
 
-## Testing it with a SecretJS client
-
-TODO
-
 ## Next steps
 
-Unlike a normal web service, there is no mechanism for a secret contract to repeatedly push information through an open connection in response to a handle or query message. Instead, if you want to support that behavior, then you must develop a pull mechanism where the client makes repeated executions of the contract. However, as our contract currently implements the functionality of reading a reminder as a handle execution that would very quickly cost the user a lot of `SCRT` due to gas fees! The solution is to create a private viewing key that allows a user to see their own reminder using a query instead of a handle message. In the next tutorial we will show how that can be done.
+Unlike a normal web service, there is no mechanism for a secret contract to repeatedly push information through an open socket connection in response to a handle or query message. Instead, if you want to support that behavior, then you must develop a pull mechanism where the client makes repeated executions of the contract. However, as our contract currently implements the functionality of reading a reminder as a handle execution that would very quickly cost the user a lot of `SCRT` due to gas fees! The solution is to create a private viewing key that allows a user to see their own reminder using a query instead of a handle message. In the next tutorial we will show how that can be done in the context of a simple React application.
 
 ## About the author
 

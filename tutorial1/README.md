@@ -257,7 +257,7 @@ First, we define a `static` unique key to point to our `State` struct and give i
 
 You can serialize your data on storage in any way you want. It is recommended that you use `bincode2` serialization from the [Secret Contract Development Toolkit](https://github.com/enigmampc/secret-toolkit) if you do not want numbers and `Option` types encoded on the chain at variable lengths. Other types of serialization, such as json encode numbers as strings, so different values can have different byte lengths in storage. That can lead to data leakage if information can be discerned due to that difference (see [here](https://github.com/baedrik/SCRT-sealed-bid-auction/blob/master/WALKTHROUGH.md#staters) and [here](https://build.scrt.network/dev/privacy-model-of-secret-contracts.html#api-calls-2)) for more detailed information.
 
-The toolkit is not automatically added to secret contract template, so add the following line to the end of the `Cargo.toml` file in the root directory of your project:
+The toolkit is not automatically added in the secret contract template, so add the following line to the end of the `Cargo.toml` file in the root directory of your project:
 
 ```toml
 secret-toolkit = { git = "https://github.com/enigmampc/secret-toolkit" }

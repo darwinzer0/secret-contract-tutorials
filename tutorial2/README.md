@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this tutorial we will demonstrate how to add Viewing Key code to the reminder secret contract that we built in the [Developing your first secret contract](https://learn.figment.io/network-documentation/secret/tutorials/creating-a-secret-contract-from-scratch) tutorial. In that tutorial we implemented code to store and read a private reminder for a user. As implemented each read of the reminder costs gas, which is not ideal. We will show here how a *viewing key* can be used to implement the same functionality in way that does not require the user to send a gas payment every time they want to read the reminder. 
+In this tutorial we will demonstrate how to add Viewing Key code to the reminder secret contract that we built in the [Developing your first secret contract](https://learn.figment.io/network-documentation/secret/tutorials/creating-a-secret-contract-from-scratch) tutorial. In that tutorial we implemented code to store and read a private reminder for a user. As implemented, each read of the reminder costs gas, which is not ideal. We will show here how a *viewing key* can be used to implement the same functionality in way that does not require the user to send a gas payment every time they want to read the reminder. 
 
 A viewing key is simply a randomly generated password defined for an address that is stored in the contract. If a query sends a user's address and viewing key together as parameters in the query, then we can use that information to share read-only private data with the user without needed to incur any gas fees.
 
@@ -194,7 +194,7 @@ pub fn try_generate_viewing_key<S: Storage, A: Api, Q: Querier>(
 Now we can update our Query messages to include authenticated queries. For example, let's say we want to implement Read as a query instead of a execute function, so we don't need to pay gas fees with every read. In `QueryMsg` in `msg.rs` add:
 
 ```rust
-	Read {
+    Read {
         address: HumanAddr,
         key: String,
     }
@@ -257,7 +257,6 @@ fn authenticated_queries<S: Storage, A: Api, Q: Querier>(
         } else if key.check_viewing_key(expected_key.unwrap().as_slice()) {
 
             return match msg {
- 
                 QueryMsg::Read { address, .. } =>
                     query_read(&deps, &address),
                 _ => panic!("This query type does not require authentication"),

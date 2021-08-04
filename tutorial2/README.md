@@ -1,3 +1,7 @@
+# Tutorial: Adding viewing keys to a secret contract
+
+## Introduction
+
 In this tutorial we will demonstrate how to add Viewing Key code to the reminder secret contract that we built in the [Developing your first secret contract](https://learn.figment.io/network-documentation/secret/tutorials/creating-a-secret-contract-from-scratch) tutorial. In that tutorial we implemented code to store and read a private reminder for a user. As implemented each read of the reminder costs gas, which is not ideal. We will show here how a *viewing key* can be used to implement the same functionality in way that does not require the user to send a gas payment every time they want to read the reminder. 
 
 A viewing key is simply a randomly generated password defined for an address that is stored in the contract. If a query sends a user's address and viewing key together as parameters in the query, then we can use that information to share read-only private data with the user without needed to incur any gas fees.
@@ -18,7 +22,7 @@ sha2 = { version = "0.9.1", default-features = false }
 
 ## Step 2 - adding viewing key utility
 
-First we will import two source files that define the main ViewingKey struct as well as a couple of utility functions. This code is pulled directly from the [Secret SCRT contract](https://github.com/enigmampc/secretSCRT). Both of these files can be found [here](). With slight modification you could easily combine these into one file if you wish.
+First we will import two source files that define the main ViewingKey struct as well as a couple of utility functions. This code is pulled directly from the [Secret SCRT contract](https://github.com/enigmampc/secretSCRT). Both of these files can be found [here](https://github.com/darwinzer0/secret-contract-tutorials/tree/main/tutorial2). With slight modification you could easily combine these into one file if you wish.
 
 ### Add `utils.rs`
 

@@ -13,7 +13,7 @@ The viewing key code implemented in this tutorial is based on the implementation
 To begin you will need to add the following packages to the `cargo.toml` file:
 
 ```toml
-secret-toolkit = { git = "https://github.com/enigmampc/secret-toolkit", rev = "444d918" }
+secret-toolkit = { git = "https://github.com/enigmampc/secret-toolkit", branch = "debug-print" }
 subtle = { version = "2.2.3", default-features = false }
 base64 = "0.12.3"
 hex = "0.4.2"

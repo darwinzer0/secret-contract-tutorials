@@ -116,7 +116,7 @@ After you have added `viewing_key.rs` and `utils.rs` to the `src/` directory, in
 
 ```rust
 mod viewing_key;
-mod u256_math;
+mod utils;
 ```
 
 In the contract, we also need to add a pseudorandom number generator seed in our config. In `state.rs` add this to our `State` struct: 

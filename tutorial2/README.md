@@ -10,7 +10,7 @@ The viewing key code implemented in this tutorial is based on the implementation
 
 ## Step 1 - preparing the build environment
 
-To begin you will need to add the following packages to the `cargo.toml` file:
+To begin you will need to add the following packages to the `Cargo.toml` file:
 
 ```toml
 secret-toolkit = { git = "https://github.com/enigmampc/secret-toolkit", branch = "debug-print" }

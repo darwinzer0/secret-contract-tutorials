@@ -270,7 +270,7 @@ fn authenticated_queries<S: Storage, A: Api, Q: Querier>(
 }
 ```
 
-This code checks that the correct viewing key has been sent for the given address(es). If no viewing key has been set, we don't want that information to leak based on the time of execution, so we essentially run a noop to cycle through the same time that it would take to check the key if it did exist. If the key matches, then we can handle the specific type of query that was sent (in our case Read). If the viewing key doesn't not match or was not set, then we return a `ViewingKeyError` response message. 
+This code checks that the correct viewing key has been sent for the given address(es). If no viewing key has been set, we don't want that information to leak based on the time of execution, so we essentially run a noop to cycle through the same time that it would take to check the key if it did exist. If the key matches, then we can handle the specific type of query that was sent (in our case Read). If the viewing key does not match or was not set, then we return a `ViewingKeyError` response message. 
 
 Now we can implement the `query_read` function. It is very similar to our `try_read` handle function from before, but instead of getting the sender address from `deps.api` we use the address that was sent as a query parameter:
 

@@ -125,19 +125,19 @@ In the contract, we also need to add a pseudorandom number generator seed in our
     pub prng_seed: Vec<u8>,
 ```
 
-In `msg.rs` update the `InitMsg` struct by adding:
+In `msg.rs` update the `InitMsg` struct to require the owner of the contract to send a pseudorandom number generator seed String when the contract is first initialized:
 
 ```rust
-    pub prng_seed: Binary,
+    pub prng_seed: String,
 ```
 
-Finally, in the `init` function in `contract.rs` update the initialization of the config to the following:
+Finally, in the `init` function in `contract.rs` update the initialization of the config to store a hashed Base64-encoded version of the seed String:
 
 ```rust
     let config = State {
         max_size,
         reminder_count: 0_u64,
-        prng_seed: sha_256(&msg.prng_seed.0).to_vec(),
+        prng_seed: sha_256(base64::encode(msg.prng_seed).as_bytes()).to_vec();,
     };
 ```
 
@@ -215,16 +215,13 @@ impl QueryMsg {
 }
 ```
 
-Then we define the `Read` response in the `QueryAnswer` enum. We also create a `ViewingKeyError` response to be sent whenever an authenticated query sends the wrong viewing key:
+Then we define the `Read` response in the `QueryAnswer` enum:
 
 ```rust
     Read {
         status: String,
         reminder: Option<String>,
         timestamp: Option<u64>,
-    },
-    ViewingKeyError {
-        msg: String,
     },
 ```
 
@@ -264,13 +261,11 @@ fn authenticated_queries<S: Storage, A: Api, Q: Querier>(
         }
     }
 
-    Ok(to_binary(&QueryAnswer::ViewingKeyError {
-        msg: "Wrong viewing key for this address or viewing key not set".to_string(),
-    })?)
+    Err(StdError::unauthorized())
 }
 ```
 
-This code checks that the correct viewing key has been sent for the given address(es). If no viewing key has been set, we don't want that information to leak based on the time of execution, so we essentially run a noop to cycle through the same time that it would take to check the key if it did exist. If the key matches, then we can handle the specific type of query that was sent (in our case Read). If the viewing key does not match or was not set, then we return a `ViewingKeyError` response message. 
+This code checks that the correct viewing key has been sent for the given address(es). If no viewing key has been set, we don't want that information to leak based on the time of execution, so we essentially run a noop to cycle through the same time that it would take to check the key if it did exist. If the key matches, then we can handle the specific type of query that was sent (in our case Read). If the viewing key does not match or was not set, then we return an unauthorized error. 
 
 Now we can implement the `query_read` function. It is very similar to our `try_read` handle function from before, but instead of getting the sender address from `deps.api` we use the address that was sent as a query parameter:
 

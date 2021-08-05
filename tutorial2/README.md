@@ -106,7 +106,7 @@ impl fmt::Display for ViewingKey {
 }
 ```
 
-This file defines the struct for our viewing key, `ViewingKey`. The `new` method is a constructor that creates a new viewing key given a `seed` and `entropy`. The `seed` is the seed we will use with the pseudorandom number generator, and is a property of the contract that is set when the contract is created. The `entropy` is provided by the user and sent from the client when they want to create a new viewing key. The `entropy` is further extended by adding in the current block height, block time, and the canonical address of the sender. The seed and entropy are used to create an instance of a Prng (a pseudorandom number generator from the secret-toolkit library). We get a slice of random bytes from the random number generator and pass this to the SHA256 algorithm to get our key, which is finally encoded in Base64.
+This file defines the struct for our viewing key, `ViewingKey`. The `new` method is a constructor that creates a new viewing key given a `seed` and `entropy`. The `seed` is the seed we will use with the pseudorandom number generator, and is a property of the contract that is set when the contract is created. The `entropy` is provided by the user and sent from the client when they want to create a new viewing key. The `entropy` is further extended by adding in the current block height, block time, and the canonical address of the sender. The seed and entropy are used to create an instance of a `Prng` (a pseudorandom number generator from the `secret-toolkit` library). We get a slice of random bytes from the random number generator and pass this to the SHA256 algorithm to get our key, which is finally encoded in Base64.
 
 Once a viewing key has been created, the method `check_viewing_key` can be used to test whether a given hashed password matches the viewing key.
 
@@ -125,13 +125,13 @@ In the contract, we also need to add a pseudorandom number generator seed in our
     pub prng_seed: Vec<u8>,
 ```
 
-In `msg.rs` update the `InitMsg` struct to require the owner of the contract to send a pseudorandom number generator seed String when the contract is first initialized:
+In `msg.rs` update the `InitMsg` struct to require the owner of the contract to send a pseudorandom number generator seed `String` when the contract is first initialized:
 
 ```rust
     pub prng_seed: String,
 ```
 
-Finally, in the `init` function in `contract.rs` update the initialization of the config to store a hashed Base64-encoded version of the seed String:
+Finally, in the `init` function in `contract.rs` update the initialization of the config to store a hashed Base64-encoded version of the seed:
 
 ```rust
     let config = State {
@@ -265,7 +265,7 @@ fn authenticated_queries<S: Storage, A: Api, Q: Querier>(
 }
 ```
 
-This code checks that the correct viewing key has been sent for the given address(es). If no viewing key has been set, we don't want that information to leak based on the time of execution, so we essentially run a noop to cycle through the same time that it would take to check the key if it did exist. If the key matches, then we can handle the specific type of query that was sent (in our case Read). If the viewing key does not match or was not set, then we return an unauthorized error. 
+This code checks that the correct viewing key has been sent for the given address(es). If no viewing key has been set, we don't want that information to leak based on the time of execution, so we essentially run a noop to cycle through the same time that it would take to check the key if it did exist. If the key matches, then we can handle the specific type of query that was sent (in our case `Read`). If the viewing key does not match or was not set, then we return an unauthorized error. 
 
 Now we can implement the `query_read` function. It is very similar to our `try_read` handle function from before, but instead of getting the sender address from `deps.api` we use the address that was sent as a query parameter:
 

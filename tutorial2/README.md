@@ -8,6 +8,12 @@ A viewing key is simply a randomly generated password defined for an address tha
 
 The viewing key code implemented in this tutorial is based on the implementation used in the SecretSCRT contract: https://github.com/enigmampc/secretSCRT.
 
+## Pre-requisites
+
+If you have not completed the [Developing your first secret contract tutorial](https://learn.figment.io/network-documentation/secret/tutorials/creating-a-secret-contract-from-scratch), do that first. That tutorial also assumes you have completed the [Secret Pathway Tutorials 1-5](https://learn.figment.io/network-documentation/secret/secret-pathway#secret-pathway-tutorials). This tutorial builds on the contract that was used in that tutorial, the full code for which you can find on GitHub at this link: [https://github.com/darwinzer0/secret-contract-tutorials/tree/main/tutorial1/code](https://github.com/darwinzer0/secret-contract-tutorials/tree/main/tutorial1/code).
+
+If you get stuck at any point, the completed code for this tutorial can also be found on GitHub here: [https://github.com/darwinzer0/secret-contract-tutorials/tree/main/tutorial2/code](https://github.com/darwinzer0/secret-contract-tutorials/tree/main/tutorial2/code).
+
 ## Step 1 - preparing the build environment
 
 To begin you will need to add the following packages to the `Cargo.toml` file:
@@ -22,7 +28,7 @@ sha2 = { version = "0.9.1", default-features = false }
 
 ## Step 2 - adding viewing key utility
 
-First we will import two source files that define the main ViewingKey struct as well as a couple of utility functions. This code is pulled directly from the [Secret SCRT contract](https://github.com/enigmampc/secretSCRT). Both of these files can be found [here](https://github.com/darwinzer0/secret-contract-tutorials/tree/main/tutorial2). With slight modification you could easily combine these into one file if you wish.
+First we will import two source files that define the main ViewingKey struct as well as a couple of utility functions. This code is pulled directly from the [Secret SCRT contract](https://github.com/enigmampc/secretSCRT). Both of these files can be found on GitHub at the following link: [https://github.com/darwinzer0/secret-contract-tutorials/tree/main/tutorial2](https://github.com/darwinzer0/secret-contract-tutorials/tree/main/tutorial2). With slight modification you could easily combine these into one file if you wish.
 
 ### Add `utils.rs`
 
@@ -125,7 +131,24 @@ In the contract, we also need to add a pseudorandom number generator seed in our
     pub prng_seed: Vec<u8>,
 ```
 
-In `msg.rs` update the `InitMsg` struct to require the owner of the contract to send a pseudorandom number generator seed `String` when the contract is first initialized:
+We also need to create setter and getter functions to store the viewing key. Add the following functions `write_viewing_key` and `read_viewing_key` to `state.rs`. Note, as you add these functions here and in subsequent code blocks you will need to add any required imports from other files to the `use` statements at the top of the file. IDEs such as VSCode should automatically suggest these imports but if you have any questions refer to the completed code on GitHub:
+
+```rust
+pub const PREFIX_VIEWING_KEY: &[u8] = b"viewingkey";
+
+pub fn write_viewing_key<S: Storage>(store: &mut S, owner: &CanonicalAddr, key: &ViewingKey) {
+    let mut user_key_store = PrefixedStorage::new(PREFIX_VIEWING_KEY, store);
+    user_key_store.set(owner.as_slice(), &key.to_hashed());
+}
+
+pub fn read_viewing_key<S: Storage>(store: &S, owner: &CanonicalAddr) -> Option<Vec<u8>> {
+    let user_key_store = ReadonlyPrefixedStorage::new(PREFIX_VIEWING_KEY, store);
+    user_key_store.get(owner.as_slice())
+}
+
+```
+
+Now in `msg.rs` update the `InitMsg` struct to require the owner of the contract to send a pseudorandom number generator seed `String` when the contract is first initialized:
 
 ```rust
     pub prng_seed: String,
@@ -137,13 +160,13 @@ Finally, in the `init` function in `contract.rs` update the initialization of th
     let config = State {
         max_size,
         reminder_count: 0_u64,
-        prng_seed: sha_256(base64::encode(msg.prng_seed).as_bytes()).to_vec();,
+        prng_seed: sha_256(base64::encode(msg.prng_seed).as_bytes()).to_vec(),
     };
 ```
 
 ## Step 3 - generating a viewing key
 
-Next we need to add a Handle function to generate a viewing key for a user. In `msg.rs` we add the following to HandleMsg:
+Next we need to add a Handle function to generate a viewing key for a user. In `msg.rs` we add the following to `HandleMsg`:
 
 ```rust
     GenerateViewingKey {
@@ -152,7 +175,15 @@ Next we need to add a Handle function to generate a viewing key for a user. In `
     },
 ```
 
-When we create a new key the client sends in some entropy to contributes to the randomness of the viewing key. The client should create a random string and pass it in with this parameter. Padding is simply an optional parameter that can be used to obfuscate the length of the entropy string.
+And create a new response in `HandleAnswer` that returns the generated key to the user:
+
+```rust
+    GenerateViewingKey {
+        key: ViewingKey,
+    },
+```
+
+When we create a new key the client sends in some entropy to contribute to the randomness of the viewing key. The client should create a random string and pass it in with this parameter. Padding is simply an optional parameter that can be used to obfuscate the length of the entropy string.
 
 Then, we add a new function in `contract.rs` to generate the key. In `handle` add:
 
@@ -271,17 +302,17 @@ Now we can implement the `query_read` function. It is very similar to our `try_r
 
 ```rust
 fn query_read<S: Storage, A: Api, Q: Querier>(
-	deps: &Extern<S, A, Q>,
-	address: &HumanAddr,
+    deps: &Extern<S, A, Q>,
+    address: &HumanAddr,
 ) -> StdResult<Binary> {
-	let status: String;
+    let status: String;
     let mut reminder: Option<String> = None;
     let mut timestamp: Option<u64> = None;
 
     let sender_address = deps.api.canonical_address(&address)?;
 
     // read the reminder from storage
-    let result: Option<Reminder> = may_load(&mut deps.storage, &sender_address.as_slice().to_vec()).ok().unwrap();
+    let result: Option<Reminder> = may_load(&deps.storage, &sender_address.as_slice().to_vec()).ok().unwrap();
     match result {
         // set all response field values
         Some(stored_reminder) => {
@@ -297,7 +328,21 @@ fn query_read<S: Storage, A: Api, Q: Querier>(
 }
 ```
 
-Now you can read the reminder as many times as you want without paying any scrt!
+Now you can read the reminder as many times as you want without paying any SCRT!
+
+## Compiling your contract
+
+As with any secret contract before uploading your contract to the network, you should compile it to wasm and then use the secret contract optimizer to reduce its size using the following commands. 
+
+```bash
+cargo wasm
+docker run --rm -v "$(pwd)":/contract \                                                 
+  --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
+  --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+  enigmampc/secret-contract-optimizer
+```
+
+Refer to the [Write & deploy your first secret contract](https://learn.figment.io/network-documentation/secret/tutorials/intro-pathway-secret-basics/5.-writing-and-deploying-your-first-secret-contract) tutorial for more information on compiling and using a javascript client to execute the contract.
 
 ## About the author
 
